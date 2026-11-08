@@ -223,7 +223,7 @@ KeyValues 的键名**不区分大小写**；随附默认文件写的是 `"Versio
 | `cs2_competitive` | **关闭（recoil 0 / ballistics 0）** | **全开** | **7 项全写** | 关 | **36** |
 | `cs2_full` | **TR-40（bmode 1）** | **全开** | **7 项全写** | 关 | **36** |
 
-`cs2_full` 的意义是“**确定性**”：它把全部受管值逐项写死（包括 `spread_scale 1.0`、`spread_move/posture 0`、`base_speed 250`、`duck_speed_min 0`、`crouch_slide_time 0.35`（1.0.16 起的手感档）、`crouch_slide_min_speed 100`、`crouch_slide_client 1`、injury 7 项、tracer 3 项），所以即使服务器 cfg 之前改过某些项，应用后也会回到同一组值。它**不**覆盖未纳入统一层的 engine cvar（见 `docs\06` L20）。该预设基于 movement **0.5.2**。
+`cs2_full` 的意义是“**确定性**”：它把全部受管值逐项写死（包括 `spread_scale 1.0`、`spread_move/posture 0`、`base_speed 250`、`duck_speed_min 0`、`crouch_slide_time 0.20`（1.0.17 起回到 CS2 数值档）、`crouch_slide_min_speed 100`、`crouch_slide_client 1`、injury 7 项、tracer 3 项），所以即使服务器 cfg 之前改过某些项，应用后也会回到同一组值。它**不**覆盖未纳入统一层的 engine cvar（见 `docs\06` L20）。该预设基于 movement **0.5.2**。
 
 ---
 

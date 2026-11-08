@@ -32,7 +32,7 @@
 #include <dhooks>
 #include <menus>
 
-#define CS2U_VERSION "1.0.16"
+#define CS2U_VERSION "1.0.17"
 #define CS2U_PREFIX  "[CS2Unified]"
 
 /* ---- merged upstream modules (generated, do not edit by hand) ------------ */
