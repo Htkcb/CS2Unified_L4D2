@@ -21,7 +21,7 @@ This project merges **CS2-style gun feel** (cs2feel) and **CS2-style movement ph
 - since 1.0.13, the three feel layers (recoil / ballistics / spread) are **team-gated**: only the infected team is skipped; survivors and spectators are byte-for-byte unchanged (`cs2u_feel_survivor_only`, default on).
 - 1.0.14 fixed the **unresponsive action buttons** on the environment page and added a client-less row-replay command `sm_cs2u_menusel`; 1.0.15 fixed the **undo-message row counting** after a full menu audit (pure-tier adaptations used to report "0 values").
 
-- Plugin version: **1.0.15** (single artifact `cs2unified.smx`)
+- Plugin version: **1.0.16** (single artifact `cs2unified.smx`)
 - Upstream baselines: **cs2feel 0.5.7-m11** (5 `.sp` files) + **cs2movement 0.5.2** (`CS2Movement_L4D2.public`, 5 `.sp`, including `cs2movement_injury.sp`; locally bumped on 2026-11-01, not tagged)
 - Local patch layer: `patches\movement_water\` applies the **0.5.3 water-slowdown** patch at generation time (adds `cs2movement_water.sp` + 3 deterministic insertions); `sync_sources.ps1` uses the same transform for write mode and `-Check` mode, so `verify.ps1` can prove the patch is still in place
 - License: **GPL-3.0** (inherited from upstream CS2Movement_L4D2; see [NOTICE](NOTICE) and [LICENSE](LICENSE))
@@ -47,7 +47,7 @@ This project merges **CS2-style gun feel** (cs2feel) and **CS2-style movement ph
 
 | Item | Value | Evidence |
 |---|---|---|
-| Plugin name / version | `CS2Unified (L4D2)` / `1.0.15` | `src\cs2unified.sp` (`CS2U_VERSION`); DS log `[CS2Unified] LOAD version=1.0.15 feel=0.5.7-m11 movement=0.5.3` |
+| Plugin name / version | `CS2Unified (L4D2)` / `1.0.16` | `src\cs2unified.sp` (`CS2U_VERSION`); DS log `[CS2Unified] LOAD version=1.0.16 feel=0.5.7-m11 movement=0.5.3` |
 | Artifact | single `build\cs2unified.smx`, **~160–180 KB** | `tools\build.ps1`; `spcomp` output is **not byte-reproducible** — size drifts and SHA256 differs between builds of the same source → **do not hardcode hashes, trust the current build output** |
 | Compile | Code / Data / Stack per current `build.ps1` output; error / warning must be 0 / 0 | `tools\build.ps1` output |
 | Source size | **23 `.sp` files** / **15,103 lines** / **573,761 B** | same counting method over `src\` (incl. patch-generated `cs2movement_water.sp`, `cs2u_weapon.sp`, `cs2u_env.sp`) |
@@ -182,7 +182,7 @@ Notes (details in [docs\04_部署与回滚.md](docs/04_部署与回滚.md)):
 ### 4.3 Runtime commands
 
 ```
-sm plugins list                 # expect CS2Unified (L4D2) 1.0.15, no [FAILED]
+sm plugins list                 # expect CS2Unified (L4D2) 1.0.16, no [FAILED]
 sm_cs2u_status                  # version / config / presets / 39 params / menu layout / auth / feel / movement summary
 sm_cs2u_presets                 # list the 7 presets, [active] marked
 sm_cs2u_preset cs2_full         # full CS2 simulation (39/39 managed values), persisted  [ROOT]
@@ -214,7 +214,7 @@ Chat entry: **`!cs2u`** (SourceMod natively maps it to `sm_cs2u`). `!menu` / `!c
 >
 > **What-you-see-is-what-you-hit**: `cs2_matched` (also the built-in default), `cs2_tracer` and `cs2_full` are all recoil 1.0 / ballistics 0 / spread 0; `cs2_split` is a "camera−ballistics separation", not WYSIWYH. A server cfg may set `cs2feel_recoil_scale` to something else — re-apply `cs2_matched` or `cs2_full` to force consistency. The **client-side** camera separation (Left4Neko `l4n_view_punch_scale`) is not part of the presets: the server cannot detect/set it; a client that set k≠1 will have its camera offset by k while bullets/hits/decals stay identical — the client's own choice, see `client\cs2u_client_l4n.cfg`.
 >
-> **`cs2_full` and sliding**: it explicitly writes all 39 managed values, including `cs2movement_crouch_slide 1`, `crouch_slide_time 0.20`, `crouch_slide_min_speed 100` and `crouch_slide_client 1` (client half-enable: both ends slide; it drives a global cvar, so the plugin gates it to "only one survivor sliding and nobody else crouching", falling back to server-side-only otherwise). This slide approximates **CS2's crouch transition** (momentum kept while running-crouching, exponential decay to crouch speed) — it is **not** a separate "slide skill" from CS2; set `cs2movement_crouch_slide` to 0 for strictly no sliding. See [docs\06_已知限制.md](docs/06_已知限制.md) L20.
+> **`cs2_full` and sliding**: it explicitly writes all 39 managed values, including `cs2movement_crouch_slide 1`, `crouch_slide_time 0.35`, `crouch_slide_min_speed 100` and `crouch_slide_client 1` (client half-enable: both ends slide; it drives a global cvar, so the plugin gates it to "only one survivor sliding and nobody else crouching", falling back to server-side-only otherwise). This slide approximates **CS2's crouch transition** (momentum kept while running-crouching, exponential decay to crouch speed) — it is **not** a separate "slide skill" from CS2; set `cs2movement_crouch_slide` to 0 for strictly no sliding. See [docs\06_已知限制.md](docs/06_已知限制.md) L20.
 
 ### 4.4 Restore
 

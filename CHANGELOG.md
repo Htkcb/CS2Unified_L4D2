@@ -7,6 +7,18 @@
 上游版本见 `src\cs2unified.sp` 的 `CS2U_VERSION` 与启动日志
 `[CS2Unified] LOAD version=<cs2u> feel=<cs2feel> movement=<cs2movement>`。
 
+## [1.0.16] - 2026-11-08
+
+### Changed
+
+- **蹲下滑行时间档位调整**：
+  - `cs2_full` 与 `cs2_competitive` 预设的 `cs2movement_crouch_slide_time` **0.45 → 0.35**
+    （滑行手感档下调；`crouch_slide_min_speed 100`、`crouch_slide_client 1` 不变）；
+  - 简易/高级菜单的「滑行档位」循环从 4 档扩到 **5 档**：
+    `0.20 / 0.35 / 0.40 / 0.45 / 0.50`（行文案同步更新）；
+  - 高级参数循环候选值加入 **0.35**、移除 **0.70**（候选容量 8 不变，该参数仍占满 8 档）。
+- `tools/verify.ps1` 两条预设契约同步为 0.35（检查总数不变，仍 145 项）。
+
 ## [1.0.15] - 2026-11-08
 
 ### Fixed

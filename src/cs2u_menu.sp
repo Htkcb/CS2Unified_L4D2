@@ -509,7 +509,7 @@ void CS2U_RenderActRow(const char[] id)
     {
         char tier[16];
         CS2U_SlideTier(tier, sizeof(tier));
-        Format(disp, sizeof(disp), "滑行档位：%s（点此切换 0.20 / 0.40 / 0.45 / 0.50）", tier);
+        Format(disp, sizeof(disp), "滑行档位：%s（点此切换 0.20 / 0.35 / 0.40 / 0.45 / 0.50）", tier);
     }
     else if (StrEqual(id, "weapon_speeds"))
         strcopy(disp, sizeof(disp), "详细移动数值：18 件武器（点此进入）");
@@ -1052,7 +1052,7 @@ void CS2U_ActionBmode(int client)
 
 void CS2U_ActionSlideTier(int client)
 {
-    char tiers[4][8] = { "0.20", "0.40", "0.45", "0.50" };
+    char tiers[5][8] = { "0.20", "0.35", "0.40", "0.45", "0.50" };
     int idxTime = CS2U_ParamFind("cs2movement_crouch_slide_time");    int idxSlide = CS2U_ParamFind("cs2movement_crouch_slide");
     if (idxTime < 0 || idxSlide < 0)
     {
@@ -1068,11 +1068,11 @@ void CS2U_ActionSlideTier(int client)
     char cur[32];
     CS2U_ParamCurrent(idxTime, cur, sizeof(cur));
     int next = 0;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
     {
         if (FloatAbs(StringToFloat(cur) - StringToFloat(tiers[i])) < 0.001)
         {
-            next = (i + 1) % 4;
+            next = (i + 1) % 5;
             break;
         }
     }

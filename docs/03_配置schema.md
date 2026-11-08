@@ -335,7 +335,7 @@ CS2U_ParamSet() 成功
 | 17 | `cs2movement_lowspeed_sustain` | bool | 0–1 | 0, 1 | GENERIC |
 | 18 | `cs2movement_crouch_slide` | bool | 0–1 | 0, 1 | GENERIC |
 | 19 | `cs2movement_crouch_slide_client` | bool | 0–1 | 0, 1 | GENERIC |
-| 20 | `cs2movement_crouch_slide_time` | float | 0.02–2 | 0.10, 0.20, 0.30, 0.40, 0.45, 0.50, 0.60, 0.70 | GENERIC |
+| 20 | `cs2movement_crouch_slide_time` | float | 0.02–2 | 0.10, 0.20, 0.30, 0.35, 0.40, 0.45, 0.50, 0.60 | GENERIC |
 | 21 | `cs2movement_crouch_slide_min_speed` | float | 0–1000 | 0, 50, 100, 150 | GENERIC |
 | 22 | `cs2movement_crouch_enable` | bool | 0–1 | 0, 1 | GENERIC |
 | 23 | `cs2movement_maxspeed` | float | 50–1000 | 150, 215, 230, 240, 320, 1000 | **ROOT** |

@@ -131,10 +131,10 @@ Check 'modes: presets carry Chinese display labels' `
     ($modesText -match 'void CS2U_ModeLabelCn' -and $modesText -match 'CS2 完全仿真' -and $modesText -match 'CS2 竞技移动')
 Check 'menu: preset rows use the Chinese label' `
     ($menuText -match 'CS2U_ModeLabelCn\(name, label' -and $menuText -match '%s（%s）%s')
-Check 'modes: cs2_competitive slide time is 0.45' `
-    (([regex]::Matches($modesText, 'CS2U_ModeEntry\(m, "cs2movement_crouch_slide_time", "0\.45"\)')).Count -ge 2)
-Check 'modes: cs2_full slide time is the 0.45 feel tier' `
-    ($modesText -match 'CS2U_ModeEntry\(m, "cs2movement_crouch_slide_time", "0\.45"\)')
+Check 'modes: cs2_competitive slide time is 0.35' `
+    (([regex]::Matches($modesText, 'CS2U_ModeEntry\(m, "cs2movement_crouch_slide_time", "0\.35"\)')).Count -ge 2)
+Check 'modes: cs2_full slide time is the 0.35 feel tier' `
+    ($modesText -match 'CS2U_ModeEntry\(m, "cs2movement_crouch_slide_time", "0\.35"\)')
 Check 'modes: preset apply prints the client-side hint' `
     ($modesText -match 'void CS2U_PresetClientHint' -and $modesText -match 'cs2feel_aimsync\.ini' -and $modesText -match 'l4n_view_punch_scale')
 Check 'modes: cs2_full preset built' ($modesText -match 'CS2U_ModesBuildFull' -and $modesText -match '"cs2_full"')

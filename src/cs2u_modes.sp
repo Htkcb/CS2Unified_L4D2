@@ -158,9 +158,9 @@ int CS2U_ModesBuildFull()
      * higher crouch cap (<= 0.2 s).  Set 0 to fall back to server-only. */
     CS2U_ModeEntry(m, "cs2movement_crouch_slide_client", "1");
     /* CS2 numeric would be ln(215/73.1)/5.2 = 0.207 s; the preset ships the
-     * 0.45 s FEEL tier (the long-slide end of the menu cycle, user-tuned
-     * 2026-11-03).  Keep min_speed 100 so a standing duck press stays inert. */
-    CS2U_ModeEntry(m, "cs2movement_crouch_slide_time", "0.45");
+     * 0.35 s FEEL tier (owner-tuned 2026-11-08, was 0.45 until 1.0.15).
+     * Keep min_speed 100 so a standing duck press stays inert. */
+    CS2U_ModeEntry(m, "cs2movement_crouch_slide_time", "0.35");
     CS2U_ModeEntry(m, "cs2movement_crouch_slide_min_speed", "100");
     CS2U_ModeEntry(m, "cs2movement_crouch_enable", "1");
     CS2U_ModeEntry(m, "cs2movement_maxspeed", "1000");
@@ -257,8 +257,9 @@ int CS2U_ModesBuildCompetitive()
     CS2U_ModeEntry(m, "cs2movement_crouch_slide_client", "1");
     /* CS2 equivalent: ln(215/73.1)/5.2 = 0.207 s (~27.3 u at AK speed).  The
      * old 0.10 s default was half of CS2, which is why "same value as CS2"
-     * still looked short; min_speed 100 keeps standing duck presses inert. */
-    CS2U_ModeEntry(m, "cs2movement_crouch_slide_time", "0.45");
+     * still looked short; since 1.0.16 the preset ships the 0.35 s feel tier
+     * (was 0.45); min_speed 100 keeps standing duck presses inert. */
+    CS2U_ModeEntry(m, "cs2movement_crouch_slide_time", "0.35");
     CS2U_ModeEntry(m, "cs2movement_crouch_slide_min_speed", "100");
     CS2U_ModeEntry(m, "cs2movement_crouch_enable", "1");
     CS2U_ModeEntry(m, "cs2movement_maxspeed", "1000");

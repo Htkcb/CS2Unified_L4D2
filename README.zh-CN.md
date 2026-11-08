@@ -10,7 +10,7 @@
 
 把 **CS2 枪械手感**（cs2feel）与 **CS2 移动物理**（cs2movement）合并成**单一 `cs2unified.smx`**，并在这两个上游模块之上加一层统一管理面：**两级管理员菜单**（常用 6 行 / 高级 7 行，7 个页面，`menu.cfg` 可热重载）、**39 个受管参数**（含受伤减速 7 项、蹲下滑行 3 项、水面减速 2 项）的校验写入、7 套内置预设（含**完全仿真 CS2** 与**CS2 压枪 + 弹道曳光**）、KeyValues 配置持久化与回滚、**SteamID 列表 > 管理员组**鉴权；1.0.2 起另加一个**纯客户端**的「相机 / 准星分离」检测（Left4Neko 的 `l4n_view_punch_scale`，服务器只检测/引导，绝不动弹道）。1.0.10 起 movement 多一层**按水面高度（踝/腰/眼）的幸存者减速**，感染者完全不受影响。1.0.12 起移动页尾部多一页**环境适配**：按 `GetTickInterval()` 实测的 tick 与运行形态，把“只在某个 tick 下成立”的值一次对齐 —— **先预览、再应用、可撤销**，而且**从不写 `sv_*`**。1.0.13 起**手感三层（压枪 / 弹道 / 散布）按队门控**：只跳过特感，幸存者与旁观者行为逐字节不变（`cs2u_feel_survivor_only`，默认开）。1.0.14 修复**环境适配页四个动作按钮点了没反应**的解析 bug，并加了无需客户端的行回放命令 `sm_cs2u_menusel`；1.0.15 全菜单审计后修正**撤销消息漏数档位通道**的计数（纯档位适配时曾显示「0 个值」）。
 
-- 插件版本：**1.0.15**（单一产物 `cs2unified.smx`）
+- 插件版本：**1.0.16**（单一产物 `cs2unified.smx`）
 - 上游基线：**cs2feel 0.5.7-m11**（5 个 `.sp`）+ **cs2movement 0.5.2**（`CS2Movement_L4D2.public`，5 个 `.sp`，含 `cs2movement_injury.sp`；2026-11-01 本地 bump，未打 tag）
 - 本地 patch 层：`patches\movement_water\` 在生成阶段给 movement 打上 **0.5.3 水面减速**（新增 `cs2movement_water.sp` + 3 处确定性插入）；`sync_sources.ps1` 写模式与 `-Check` 模式走同一套变换，`verify.ps1` 因此能证明补丁仍在
 - 许可：**GPL-3.0**（继承上游 CS2Movement_L4D2；见 [NOTICE](NOTICE) 与 [LICENSE](LICENSE)）
@@ -36,7 +36,7 @@
 
 | 项 | 值 | 证据 |
 |---|---|---|
-| 插件名 / 版本 | `CS2Unified (L4D2)` / `1.0.15` | `src\cs2unified.sp`（`CS2U_VERSION`）；DS 日志 `[CS2Unified] LOAD version=1.0.15 feel=0.5.7-m11 movement=0.5.3` |
+| 插件名 / 版本 | `CS2Unified (L4D2)` / `1.0.16` | `src\cs2unified.sp`（`CS2U_VERSION`）；DS 日志 `[CS2Unified] LOAD version=1.0.16 feel=0.5.7-m11 movement=0.5.3` |
 | 产物 | 单一 `build\cs2unified.smx`，**约 160–180 KB**（最新构建 **174,010 B**） | `tools\build.ps1`；`spcomp` 输出**不可逐字节复现**，同一源码两次构建大小会漂移、SHA256 每次不同 → **不要写死哈希，以当次 build 输出为准** |
 | 编译体积 | Code / Data / Stack 以当次 `build.ps1` 输出为准；error / warning 必须为 0 / 0 | `tools\build.ps1` 输出 |
 | 源码规模 | **23 个 `.sp`** / **15,103 行** / **573,761 B** | `src\` 同一统计口径（含 patch 生成的 `cs2movement_water.sp` 与 `cs2u_weapon.sp` / `cs2u_env.sp`） |
@@ -177,7 +177,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\deploy.ps1 -DisableProbes
 ### 4.3 运行时命令
 
 ```
-sm plugins list                 # 期望看到 CS2Unified (L4D2) 1.0.15，无 [FAILED]
+sm plugins list                 # 期望看到 CS2Unified (L4D2) 1.0.16，无 [FAILED]
 sm_cs2u_status                  # 版本 / 配置 / 预设 / 39 参数 / 菜单布局 / 鉴权 / feel / movement 摘要
 sm_cs2u_presets                 # 列出 7 套预设，标注 [active]
 sm_cs2u_preset cs2_full         # 完全仿真 CS2（39/39 个受管值）并落盘  [ROOT]
@@ -209,7 +209,7 @@ sm_cs2u_menudump                # 打印 7 个菜单页（常用/高级各一遍
 >
 > **所见即所中**：`cs2_matched`（也是内置默认）、`cs2_tracer` 与 `cs2_full` 都是 recoil 1.0 / ballistics 0 / spread 0；`cs2_split` 是“相机−弹道分离”，不是所见即所中。服务器 cfg 可能把 `cs2feel_recoil_scale` 改成别的值，要强制一致就重新应用 `cs2_matched` 或 `cs2_full`。**客户端侧**的相机分离（Left4Neko `l4n_view_punch_scale`）不在预设里：服务器检测不到/设置不了它，装了且设了 k≠1 的客户端相机会按 k 偏，而子弹/命中/弹孔仍是同一个——这是客户端自选，见 `client\cs2u_client_l4n.cfg`。
 >
-> **`cs2_full` 与滑行**：它把 39 个受管值全部显式写死，包含 `cs2movement_crouch_slide 1`、`crouch_slide_time 0.20`、`crouch_slide_min_speed 100` 与 `crouch_slide_client 1`（客户端半开启：两端同滑；它驱动的是全局 cvar，所以插件内置了「只有一个幸存者在滑行且没有别人蹲着」的门控，不满足时退回服务端单边）。这个滑行是项目对 **CS2 蹲下过渡**的近似（跑动按蹲保留动量、指数衰减到蹲速），**不是** CS2 里独立存在的“滑铲技能”；要严格无滑行就把 `cs2movement_crouch_slide` 设 0。详见 [docs\06_已知限制.md](docs/06_已知限制.md) L20。
+> **`cs2_full` 与滑行**：它把 39 个受管值全部显式写死，包含 `cs2movement_crouch_slide 1`、`crouch_slide_time 0.35`、`crouch_slide_min_speed 100` 与 `crouch_slide_client 1`（客户端半开启：两端同滑；它驱动的是全局 cvar，所以插件内置了「只有一个幸存者在滑行且没有别人蹲着」的门控，不满足时退回服务端单边）。这个滑行是项目对 **CS2 蹲下过渡**的近似（跑动按蹲保留动量、指数衰减到蹲速），**不是** CS2 里独立存在的“滑铲技能”；要严格无滑行就把 `cs2movement_crouch_slide` 设 0。详见 [docs\06_已知限制.md](docs/06_已知限制.md) L20。
 
 ### 4.4 还原
 

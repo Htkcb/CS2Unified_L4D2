@@ -99,11 +99,12 @@ void CS2U_ParamsInit()
      * numeric equivalent (ln(215/73.1)/5.2 = 0.207 s -> 27.3 u); 0.10 is only
      * half of it.  L4D2 has no CS2-style duck transition and the client eats
      * the first tick or two of the slide, so the rendered slide reads shorter
-     * than the configured one.  0.45 (59.2 u, 28.8 ticks) is the owner's
-     * "feel" tier (2026-11-01); 0.50 (65.8 u, 32 ticks) stays as the upper
-     * bound and no longer carries the feel label. */
-    p = CS2U_ParamAdd("cs2movement_crouch_slide_time", "Crouch slide decay time (0.20 = CS2 numeric, 0.45 = feel)", PARAM_TYPE_FLOAT, PARAM_ACCESS_ADMIN, PARAM_GROUP_MOVE, 0.02, 2.0);
-    CS2U_ParamCand(p, "0.10"); CS2U_ParamCand(p, "0.20"); CS2U_ParamCand(p, "0.30"); CS2U_ParamCand(p, "0.40"); CS2U_ParamCand(p, "0.45"); CS2U_ParamCand(p, "0.50"); CS2U_ParamCand(p, "0.60"); CS2U_ParamCand(p, "0.70");
+     * than the configured one.  0.45 (59.2 u, 28.8 ticks) was the owner's
+     * "feel" tier from 2026-11-03; since 1.0.16 the feel tier is 0.35
+     * (46.0 u, 22.4 ticks) and both presets ship it.  0.60 is now the upper
+     * bound (0.70 retired from the cycle). */
+    p = CS2U_ParamAdd("cs2movement_crouch_slide_time", "Crouch slide decay time (0.20 = CS2 numeric, 0.35 = feel)", PARAM_TYPE_FLOAT, PARAM_ACCESS_ADMIN, PARAM_GROUP_MOVE, 0.02, 2.0);
+    CS2U_ParamCand(p, "0.10"); CS2U_ParamCand(p, "0.20"); CS2U_ParamCand(p, "0.30"); CS2U_ParamCand(p, "0.35"); CS2U_ParamCand(p, "0.40"); CS2U_ParamCand(p, "0.45"); CS2U_ParamCand(p, "0.50"); CS2U_ParamCand(p, "0.60");
 
     p = CS2U_ParamAdd("cs2movement_crouch_slide_min_speed", "Crouch slide minimum start speed", PARAM_TYPE_FLOAT, PARAM_ACCESS_ADMIN, PARAM_GROUP_MOVE, 0.0, 1000.0);
     CS2U_ParamCand(p, "0"); CS2U_ParamCand(p, "50"); CS2U_ParamCand(p, "100"); CS2U_ParamCand(p, "150");
