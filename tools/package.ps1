@@ -76,7 +76,7 @@ foreach ($tool in 'deploy.ps1', 'uninstall.ps1', 'gen_menu_auth.ps1') {
 
 # ---- docs / license ------------------------------------------------------
 Copy-Item (Join-Path $ProjectRoot 'docs') (Join-Path $Stage 'docs') -Recurse -Force
-foreach ($f in 'README.md', 'HANDOVER.md', 'LICENSE', 'NOTICE') {
+foreach ($f in 'README.md', 'LICENSE', 'NOTICE') {
     Copy-Item (Join-Path $ProjectRoot $f) (Join-Path $Stage $f) -Force
 }
 
