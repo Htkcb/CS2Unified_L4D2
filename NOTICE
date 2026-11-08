@@ -4,7 +4,6 @@
 本项目自身以 **GNU GPL-3.0** 发布，许可证全文见 [LICENSE](LICENSE)。
 
 > 本文件不是法律意见。许可与再分发问题请自行核对上游仓库与适用法律；标注 `UNVERIFIED` 的地方表示本仓库无法确认。
-
 ---
 
 ## 1. 项目组成与来源
@@ -13,7 +12,7 @@
  --- --- --- --- 
   `src\cs2unified.sp`   本项目手写   GPL-3.0   —  
   `src\cs2u_shared.sp`、`cs2u_params.sp`、`cs2u_core.sp`、`cs2u_config.sp`、`cs2u_modes.sp`、`cs2u_menu.sp`、`cs2u_visual.sp`   本项目手写   GPL-3.0   —  
-  `src\feel\cs2feel_core.sp`、`cs2feel_config.sp`、`cs2feel_spread.sp`、`cs2feel_recoil.sp`、`cs2feel_ballistics.sp`   `..\CS2FeelVScript_L4D2\plugin_src`（cs2feel **0.5.7-m11**）   上游仓库**未见 LICENSE 文件**，授权状态 `UNVERIFIED`（见 §5）   机械重命名（14 条）+ 移除模块 `myinfo`；逻辑未改  
+  `src\feel\cs2feel_core.sp`、`cs2feel_config.sp`、`cs2feel_spread.sp`、`cs2feel_recoil.sp`、`cs2feel_ballistics.sp`   `..\CS2FeelVScript_L4D2\plugin_src`（cs2feel **0.5.7-m11**）   cs2feel 作者即本项目所有者本人，随本项目按 GPL-3.0 发布（见 §5）   机械重命名（14 条）+ 移除模块 `myinfo`；逻辑未改  
   `src\movement\cs2movement.sp`、`cs2movement_move.sp`、`cs2movement_crouch.sp`、`cs2movement_config.sp`、`cs2movement_injury.sp`   `..\CS2Movement_L4D2.public\scripting`（cs2movement **0.5.1**，tag `v0.5.1`）   **GPL-3.0**（上游 `LICENSE`）   机械重命名（19 条）+ 移除模块 `myinfo`；逻辑未改  
   `gamedata\l4d2_cs2feel.txt`   上游 cs2feel（Windows-only 签名/偏移）   随上游   未改  
   `gamedata\cs2movement.txt`   上游 cs2movement   GPL-3.0   未改  
@@ -69,9 +68,8 @@
 ## 5. 许可状态说明（重要）
 
 1. **cs2movement 侧是明确的 GPL-3.0**：`..\CS2Movement_L4D2\LICENSE` 为 GNU GPL v3 全文（35,147 B），本项目的 `LICENSE` 即其逐字节副本（见 §6）。
-2. **cs2feel 侧无法确认**：`..\CS2FeelVScript_L4D2` 仓库根目录只有 `.gitattributes`、`.gitignore`、`README.md`（以及 `addon\`、`docs\`、`plugin_src\` 等目录），**没有 LICENSE / COPYING 文件**；在 README 与文档中也未检索到 GPL 或其它许可声明。因此其授权状态标记为 **UNVERIFIED**。
-   - 本项目的处理：保留完整来源与本文件中的修改说明，整体按 GPL-3.0 发布；
-   - **公开再分发或商业使用前，应与 cs2feel 作者确认授权条款是否与 GPL-3.0 兼容**。若上游后续补充许可证，以上游为准。
+2. **cs2feel 侧为本项目所有者的本人作品**：上游 cs2feel（0.5.7-m11）的作者即本项目所有者本人（2026-11-08 由所有者确认），因此该部分随本项目整体按 **GPL-3.0** 授权发布，不存在第三方再分发障碍。
+   - 本项目的处理：保留完整来源与本文件中的修改说明，整体按 GPL-3.0 发布。
 3. **数据层 VPK**：`addoninfo.txt` 自述其只拥有 7 个扩散键、其余键与 `CS2Feel_L7_WeaponScripts_v1.6.2` 逐字节相同——也就是说 VPK 内含**基于 Valve `scripts\weapon_*.txt` 的修改版脚本**。再分发这类修改过的游戏脚本是否符合 L4D2 最终用户许可，本项目不做法律判断，请自行确认。
 4. 本项目**不包含** Valve 的游戏代码、反编译产物或 Steam 内容；`gamedata\*.txt` 只记录为互操作而测得的函数签名与偏移。
 
