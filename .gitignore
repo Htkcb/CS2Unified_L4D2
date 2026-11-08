@@ -1,0 +1,21 @@
+# Build artifacts (rebuild with tools\build.ps1)
+/build/
+*.smx
+
+# Release packages (tools\package.ps1)
+/dist/
+
+# Deployment backups (created by tools\deploy.ps1)
+/_backup/
+
+# Runtime evidence & suite outputs are NOT published in this repository.
+# The test conclusions live in docs\05_测试清单.md and the docs tables.
+/tests/results/
+
+# Editor / OS noise
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.log

@@ -1,0 +1,154 @@
+// ===========================================================================
+// CS2Feel_L4D2 - SourceMod gamedata
+// ---------------------------------------------------------------------------
+// Target build : L4D2 PatchVersion 2.2.4.3
+//                left4dead2/bin/server.dll
+//                9,130,288 B
+//                SHA256 A93EC916A8F26FBEA85688C321D2BA8DD346D435FAB09A0B926DD950C2E1EA12
+// Verified by  : tools/l4d2_sig_scan.py (ASCII, stdlib only)
+//                report: E:\L4D2_DS\gamedata_work\sig_report.md
+//                each pattern below was re-run with --verify: 1 hit, UNIQUE
+//
+// PLATFORM SCOPE - WINDOWS ONLY.
+//   There is intentionally NO linux key anywhere below. No L4D2 Linux server
+//   binary (server_srv.so) could be obtained on the build machine, so nothing
+//   on the Linux side was measured - not even the symbol names. Consequence:
+//   on Linux SourceMod cannot resolve these entries, every lookup fails, and
+//   the plugin MUST fail closed (refuse to activate) instead of falling back
+//   to a guessed offset. This is the "single platform first" rule of the plan
+//   (v4 section 3.6 item 4 / section 5.5).
+//
+// MAINTENANCE: every signature is bound to the exact build above. After any
+// L4D2 update, re-run the verification commands in sig_report.md before
+// shipping; a signature that no longer matches must disable the plugin, not
+// degrade it.
+// ===========================================================================
+
+"Games"
+{
+    "left4dead2"
+    {
+        "Offsets"
+        {
+            // Gun-entity float spread accumulator: +0x17EC == 6124 decimal.
+            // DECIMAL MATTERS: 0x17EC is 6124, NOT 8684 (8684 == 0x21EC, a
+            // different field). Derived from the binary, not copied.
+            // Evidence (three independent sides):
+            //   static read : 0x103E978F  F3 0F 10 86 EC 17 00 00
+            //                            (movss xmm0,[esi+0x17EC]); the value is
+            //                            later printed as HorizSpread/VertSpread
+            //   static write: 0x103E7DC0  xorps xmm0,xmm0 / movss [esi+0x17EC],xmm0
+            //                            (engine itself zeroes it on deploy)
+            //   runtime     : TV-18, SetEntDataFloat(weapon, 0x17EC, 0.0)
+            //                            900/900 readback ok, engine consumes it
+            // Used as a bare memory offset (SetEntDataFloat), NOT as a
+            // datamap/netprop field (TV-16 + TV-18).
+            "CS2Feel::GunSpreadOffset"
+            {
+                "windows"    "6124"
+            }
+        }
+
+        "Signatures"
+        {
+            // 1 hit @ VA 0x103E9370, function length ~0x9C3 (2499 B).
+            // Raw hex : 55 8B EC 83 EC 34 53 56 8B F1 E8 ? ? ? ? 8B D8
+            // NOTE: the bare 10-byte prologue
+            //       "55 8B EC 83 EC 34 53 56 8B F1" has 7 hits in .text and is
+            //       therefore NOT usable. The trailing 8B D8 plus the
+            //       wildcarded rel32 call are what make this pattern unique.
+            "CTerrorGun::FireBullet"
+            {
+                "library"    "server"
+                "windows"    "\x55\x8B\xEC\x83\xEC\x34\x53\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x8B\xD8"
+            }
+
+            // 1 hit @ VA 0x103C7470, function length ~0x432 (1074 B).
+            // Raw hex : 55 8B EC 81 EC A0 00 00 00 8B 45 18
+            // This 12-byte prologue is unique as-is; no wildcards needed.
+            "CTerrorPlayer::FireBullet"
+            {
+                "library"    "server"
+                "windows"    "\x55\x8B\xEC\x81\xEC\xA0\x00\x00\x00\x8B\x45\x18"
+            }
+
+            // 1 hit @ VA 0x103E7320, function length ~0x75 (117 B).
+            // Raw hex : 55 8B EC 51 56 8B F1 E8 ? ? ? ? 85 C0 74 ? 8B 10
+            // Cross-check: the function occupies vtable slot 452, which is the
+            // "windows 452" value used by upstream WeaponHandling. (Those
+            // upstream numbers are vtable dword slot indices, not byte offsets.)
+            "CTerrorGun::GetRateOfFire"
+            {
+                "library"    "server"
+                "windows"    "\x55\x8B\xEC\x51\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x85\xC0\x74\x2A\x8B\x10"
+            }
+
+            // OPTIONAL fail-closed build guard for the offset above.
+            // 1 hit @ 0x103E978F (mid-function; do NOT hook it).
+            // Raw hex : F3 0F 10 86 EC 17 00 00 F3 0F 11 45 F4 0F 57 05 ? ? ? ?
+            // The last 4 bytes are the absolute constant 0x105D3330; it is
+            // relocated on load, so it must stay wildcarded.
+            // Intended use: resolve the address, verify the bytes still encode
+            // [reg+0x17EC], and treat any mismatch as "unsupported build".
+            "CS2Feel::GunSpreadReadSite"
+            {
+                "library"    "server"
+                "windows"    "\xF3\x0F\x10\x86\xEC\x17\x00\x00\xF3\x0F\x11\x45\xF4\x0F\x57\x05\x2A\x2A\x2A\x2A"
+            }
+        }
+
+        "Addresses"
+        {
+            "CTerrorGun::FireBullet"
+            {
+                "windows"
+                {
+                    "signature"    "CTerrorGun::FireBullet"
+                }
+            }
+            "CTerrorPlayer::FireBullet"
+            {
+                "windows"
+                {
+                    "signature"    "CTerrorPlayer::FireBullet"
+                }
+            }
+            "CTerrorGun::GetRateOfFire"
+            {
+                "windows"
+                {
+                    "signature"    "CTerrorGun::GetRateOfFire"
+                }
+            }
+            "CS2Feel::GunSpreadReadSite"
+            {
+                "windows"
+                {
+                    "signature"    "CS2Feel::GunSpreadReadSite"
+                }
+            }
+        }
+
+        // -------------------------------------------------------------------
+        // Deliberately NOT included (verified but not name-safe yet):
+        //
+        //   CTerrorWeapon::Deploy (upstream vtable slot 264)
+        //     CTerrorWeapon vtable 0x106D6C8C slot 264 -> 0x103F1180
+        //     CTerrorGun    vtable 0x106D5544 slot 264 -> 0x103E7DC0  (different)
+        //   Two different targets for the same slot means one is an override;
+        //   without symbols neither can be named with certainty, so the entry
+        //   stays out (fail closed). 0x103E7DC0 is the better behavioural
+        //   candidate (it zeroes [this+0x17EC] on deploy) but that is
+        //   inference; re-verify before M4/M5 needs it.
+        //
+        //   CTerrorWeapon::GetReloadDurationModifier (slot 358 -> 0x103EF800)
+        //   CTerrorWeapon::GetDeployDurationModifier (slot 359 -> 0x103EF900)
+        //   Both are credible (same target in both vtables) and both have
+        //   unique signatures, but they belong to the deploy/reload module
+        //   (M7), not to M2. Add them when that module is implemented.
+        //
+        //   Function lengths / RVAs / file offsets are build-bound and are
+        //   intentionally not encoded; the signatures above locate them.
+        // -------------------------------------------------------------------
+    }
+}

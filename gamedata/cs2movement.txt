@@ -1,0 +1,41 @@
+"Games"
+{
+    "left4dead2"
+    {
+        "Signatures"
+        {
+            // CPlayerMove::SetupMove wrapper (0x1024BCD0).  The per-player run
+            // cap is written into m_flMaxspeed here, before the inner function
+            // copies it into CMoveData+0x3C (0x1017FEFF).
+            "CS2M_SetupMove"
+            {
+                "library" "server"
+                "windows" "\x55\x8B\xEC\x53\x56\x8B\x75\x08\x57\x8B\x7D\x0C\x8B\xD9\x57\x8B\xCE"
+            }
+            // CCSGameMovement::CheckParameters (0x10238C80) -- the override the
+            // L4D2 player actually runs (the base 0x100F58C0 got 0 hits on the
+            // real path).  Post-hooked by cs2movement_duck_speed to replace the
+            // engine's crouch speed (75) with the per-player CS2 value.
+            // Byte 0x2A is the SourceMod wildcard.
+            "CS2M_CheckParams"
+            {
+                "library" "server"
+                "windows" "\x55\x8B\xEC\x83\xEC\x0C\x56\x8B\xF1\x8B\x46\x04\x8A\x80\x72\x01\x00\x00\x3C\x01\x0F\x84\x2A\x2A\x00\x00\x3C\x08"
+            }
+            // CGameMovement::Friction (0x100F4680) -- the only implementation
+            // the live player ground path runs (it is the only direct callee of
+            // FullWalkMove's ground branch at 0x100F97EC).  It is the function
+            // whose `control = max(speed, sv_stopspeed)` line creates the
+            // 80*5.2/5.5 = 75.64 u/s sustainability floor.  Pre+post detoured by
+            // cs2movement_lowspeed_sustain (default 0) to give sub-threshold
+            // wishspeeds a per-player friction cap.
+            // 42-byte all-literal prologue through `movss xmm0,[ecx+0x2014]`;
+            // verified 1 matching location in the whole image.
+            "CS2M_Friction"
+            {
+                "library" "server"
+                "windows" "\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x0F\x57\xDB\x83\xEC\x2C\x56\x8B\xF1\x8B\x4E\x04\xF3\x0F\x10\x81\x14\x20\x00\x00"
+            }
+        }
+    }
+}

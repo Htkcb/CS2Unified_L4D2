@@ -1,0 +1,102 @@
+# NOTICE · 第三方组件、来源与修改说明
+
+本文件说明 **CS2Unified_L4D2**（下称“本项目”）发布内容里各部分的来源、许可与修改，以及随附/依赖的第三方组件。
+本项目自身以 **GNU GPL-3.0** 发布，许可证全文见 [LICENSE](LICENSE)。
+
+> 本文件不是法律意见。许可与再分发问题请自行核对上游仓库与适用法律；标注 `UNVERIFIED` 的地方表示本仓库无法确认。
+
+---
+
+## 1. 项目组成与来源
+
+  本项目路径   来源   许可/状态   修改  
+ --- --- --- --- 
+  `src\cs2unified.sp`   本项目手写   GPL-3.0   —  
+  `src\cs2u_shared.sp`、`cs2u_params.sp`、`cs2u_core.sp`、`cs2u_config.sp`、`cs2u_modes.sp`、`cs2u_menu.sp`、`cs2u_visual.sp`   本项目手写   GPL-3.0   —  
+  `src\feel\cs2feel_core.sp`、`cs2feel_config.sp`、`cs2feel_spread.sp`、`cs2feel_recoil.sp`、`cs2feel_ballistics.sp`   `..\CS2FeelVScript_L4D2\plugin_src`（cs2feel **0.5.7-m11**）   上游仓库**未见 LICENSE 文件**，授权状态 `UNVERIFIED`（见 §5）   机械重命名（14 条）+ 移除模块 `myinfo`；逻辑未改  
+  `src\movement\cs2movement.sp`、`cs2movement_move.sp`、`cs2movement_crouch.sp`、`cs2movement_config.sp`、`cs2movement_injury.sp`   `..\CS2Movement_L4D2.public\scripting`（cs2movement **0.5.1**，tag `v0.5.1`）   **GPL-3.0**（上游 `LICENSE`）   机械重命名（19 条）+ 移除模块 `myinfo`；逻辑未改  
+  `gamedata\l4d2_cs2feel.txt`   上游 cs2feel（Windows-only 签名/偏移）   随上游   未改  
+  `gamedata\cs2movement.txt`   上游 cs2movement   GPL-3.0   未改  
+  `configs\cs2feel\*`（`weapons.cfg`、`native_baseline.cfg`、`punch_sequences.cfg`、`presets\*`）   上游 cs2feel   随上游   未改  
+  `configs\cs2movement.cfg`、`configs\cs2movement_weapons.cfg`   上游 cs2movement   GPL-3.0   未改  
+  `configs\cs2unified\cs2unified.cfg`   本项目维护（7 套预设 + 默认 settings）   GPL-3.0   新写  
+  `addon\addoninfo.txt`、`addon\cs2feel_r2_plugin.vpk`   上游 `..\CS2FeelVScript_L4D2\addon`（VPK 与上游**逐字节相同**：85,318 B，SHA256 `D7C43E5CA9BC255A52B0CE1BE149A8C254C9017AF72D9E4B6A36B975D364C7BC`）   见 §5（含 Valve 脚本的修改版）   未改  
+  `tools\*.ps1`、`tests\rcon.ps1`   本项目手写   GPL-3.0   —  
+  `README.md`、`docs\00–06`、`NOTICE`、`LICENSE`   本项目手写（`LICENSE` 除外，见 §6）   GPL-3.0   —  
+
+---
+
+## 2. 本项目做了什么修改
+
+**对上游源码（`src\feel\`、`src\movement\`）**：
+
+1. 移除各模块自带的 `public Plugin myinfo = { ... };`，由 `src\cs2unified.sp` 持有唯一 `myinfo`；
+2. 按 `tools\sync_sources.ps1` 的固定表做**整词重命名**（feel 14 条、movement 19 条），目的仅是让两个上游能在**同一个编译单元**里共存并让回调顺序可控；
+3. 重命名**不改变** ConVar 名（`cs2feel_*` / `cs2movement_*`）、命令名（`sm_cs2feel_*` / `sm_cs2movement_*`）与 feel natives（`CS2F_*`）。
+
+**新增（不属于上游）**：
+
+- 统一的回调分发（`OnPluginStart` / `OnConfigsExecuted` / `OnMapStart` / `OnPlayerRunCmd` / `OnPluginEnd` 等按固定顺序转发）；
+- 统一层 ConVar 与 10 个 `sm_cs2u*` 命令；可选聊天别名 `!menu` / `!c2u`（默认关闭）；
+- **33 个受管参数**的校验表（含 injury 7 项）、7 套内置预设（含 `cs2_tracer`、`cs2_full`）+ 2 个 DIY 槽位；**简易模式**白话菜单、手写分页菜单；KeyValues 配置持久化（含 `.bak`、BOM 处理、回滚）；
+- `src\cs2u_visual.sp`：服务端曳光弹（`bullet_impact` → `TE_SetupBeamPoints` → `TE_SendToAll`，精灵 `materials/sprites/laserbeam.vmt`，alpha 可调，纯视觉、默认关闭）；movement 0.5.1 的 injury 由上游提供，统一层只做参数管理。
+
+**行为差异**：来自“回调顺序”与“统一层对 ConVar 的覆盖”，不是上游算法被改写。上游各自的开关（`cs2feel_enable` / `cs2movement_enable`）与 fail-closed 保护原样保留。
+
+---
+
+## 3. 运行期第三方组件（不随本项目分发）
+
+  组件   来源   许可   说明  
+ --- --- --- --- 
+  SourceMod 1.12   AlliedModders（<https://www.sourcemod.net/>）   GPL-3.0   插件运行平台；本项目**不随附**其二进制  
+  MetaMod:Source 1.12   AlliedModders   GPL-3.0   SourceMod 的加载器；**不随附**  
+  DHooks   AlliedModders   GPL-3.0   movement 引擎层三条 detour 的运行期依赖；**不随附**（缺失时自动降级，不会崩服）  
+  SourcePawn 编译器 `spcomp`   SourceMod 发布包   GPL-3.0   **仅构建期**需要，不进入运行环境  
+  Left 4 Dead 2 专用服务器   Valve   Valve 最终用户许可协议   不随附；本项目需要合法授权的 L4D2 服务端  
+
+---
+
+## 4. 商标与免责
+
+- Left 4 Dead 2、Counter-Strike 2、Source、Steam 是 Valve Corporation 的商标或注册商标。
+- SourceMod、MetaMod、AlliedModders 是其各自所有者的名称/商标。
+- 本项目与 Valve Corporation、AlliedModders LLC **无隶属、赞助或背书关系**。
+- 本项目按“现状”提供，不附带任何明示或暗示担保；使用本插件修改游戏行为（速度、后坐力、弹道）可能违反某些服务器的规则，请仅在你有权管理的服务器上使用。
+
+---
+
+## 5. 许可状态说明（重要）
+
+1. **cs2movement 侧是明确的 GPL-3.0**：`..\CS2Movement_L4D2\LICENSE` 为 GNU GPL v3 全文（35,147 B），本项目的 `LICENSE` 即其逐字节副本（见 §6）。
+2. **cs2feel 侧无法确认**：`..\CS2FeelVScript_L4D2` 仓库根目录只有 `.gitattributes`、`.gitignore`、`README.md`（以及 `addon\`、`docs\`、`plugin_src\` 等目录），**没有 LICENSE / COPYING 文件**；在 README 与文档中也未检索到 GPL 或其它许可声明。因此其授权状态标记为 **UNVERIFIED**。
+   - 本项目的处理：保留完整来源与本文件中的修改说明，整体按 GPL-3.0 发布；
+   - **公开再分发或商业使用前，应与 cs2feel 作者确认授权条款是否与 GPL-3.0 兼容**。若上游后续补充许可证，以上游为准。
+3. **数据层 VPK**：`addoninfo.txt` 自述其只拥有 7 个扩散键、其余键与 `CS2Feel_L7_WeaponScripts_v1.6.2` 逐字节相同——也就是说 VPK 内含**基于 Valve `scripts\weapon_*.txt` 的修改版脚本**。再分发这类修改过的游戏脚本是否符合 L4D2 最终用户许可，本项目不做法律判断，请自行确认。
+4. 本项目**不包含** Valve 的游戏代码、反编译产物或 Steam 内容；`gamedata\*.txt` 只记录为互操作而测得的函数签名与偏移。
+
+---
+
+## 6. LICENSE 的来源
+
+- 文件：`LICENSE`
+- 来源：`..\CS2Movement_L4D2\LICENSE`（**逐字节复制，未改写**）
+- 大小：35,147 字节
+- SHA256：`8CEB4B9EE5ADEDDE47B31E975C1D90C73AD27B6B165A1DCD80C7C545EB65B903`
+- 内容：GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
+
+可用以下命令核对：
+
+```powershell
+(Get-Item .\LICENSE).Length
+(Get-FileHash .\LICENSE -Algorithm SHA256).Hash
+(Get-FileHash ..\CS2Movement_L4D2\LICENSE -Algorithm SHA256).Hash   # 应完全一致
+```
+
+---
+
+## 7. 工具与制作说明（非许可声明）
+
+- 本项目的代码、文档、脚本与测试记录在 **DeepSeek Harness** 环境中由 AI 代理协作完成；上游代码与数据资产仍归其原作者。
+- 本文档中的所有“已实测”结论都以开发版测试记录（结论数字已整理进 `docs\05_测试清单.md` 的表格）与 `src\`/`tools\` 代码为依据；运行时原始记录（`tests\results\`、控制台日志）不随本公开仓库发布；未验证项按 `UNVERIFIED` 标注。
+- 运行期实测环境：L4D2 `PatchVersion 2.2.4.3`、SourceMod `1.12.0.7230`、Windows 专用服、64 tick（L4DToolZ）。

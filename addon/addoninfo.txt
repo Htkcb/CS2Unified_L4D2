@@ -1,0 +1,13 @@
+"AddonInfo"
+{
+	addonSteamAppID		550
+	addontitle		"CS2FeelVScript_L4D2 R2 (data layer + plugin)"
+	addonversion		0.5.0
+	addonauthor		"CS2FeelVScript_L4D2"
+	addonDescription	"Route R2 build. Data layer owns 7 spread keys; the server plugin cs2feel_recoil.sp owns the recoil amplitude (VerticalPunch stays at the L7/native value in these scripts).
+
+- CS2Feel_L7_WeaponScripts_v1.6.2 owns CycleTime / Damage / clip_size / PenetrationPower and every other key (every non-owned key is byte-identical to that release).
+- This layer owns exactly 7 keys: SpreadPerShot, MaxSpread, SpreadDecay, MinDuckingSpread, MinStandingSpread, MinInAirSpread, MaxMovementSpread.
+- PRECONDITIONS: cs2feel_spread_mode must stay 0 (default). Do not run this build with the plugin's spread module enabled.
+- Do NOT enable this and cs2feel_vscript_pure.vpk at the same time: both override the same scripts/weapon_*.txt."
+}
