@@ -41,7 +41,9 @@ if ($compilerCandidates.Count -eq 0) {
 if ($compilerCandidates.Count -eq 0) {
     throw "spcomp.exe not found. Pass -CompilerPath <path to spcomp.exe> (from any SourceMod install: addons/sourcemod/scripting/spcomp.exe) or install SourceMod."
 }
-$spcomp = $compilerCandidates[0]
+# @() re-wrap: Where-Object output degrades to a scalar when a single item
+# survives, and indexing a scalar string yields its first character.
+$spcomp = @($compilerCandidates)[0]
 
 if (-not $IncludePath) {
     $IncludePath = Join-Path (Split-Path -Parent $spcomp) 'include'
