@@ -274,7 +274,7 @@ CS2Unified_L4D2\
 ├─ tools\
 │  ├─ sync_sources.ps1           # 上游 → src\ 的机械重命名（-Check 供验收）
 │  ├─ build.ps1                  # spcomp 编译；-Sync / -StrictWarnings
-│  ├─ verify.ps1                 # 65 项静态验收
+│  ├─ verify.ps1                 # 静态验收（145 项，随版本增长）
 │  ├─ deploy.ps1                 # 备份 + 安装 + 停用旧插件 + 清单
 │  └─ uninstall.ps1              # 按清单还原（默认 dry-run，-Apply 执行）
 ├─ tests\
@@ -341,7 +341,7 @@ CS2Unified_L4D2\
 | [docs\02_菜单结构.md](docs/02_菜单结构.md) | 两级菜单树、info id、鉴权、menu.cfg、热重载、反馈与验收 |
 | [docs\03_配置schema.md](docs/03_配置schema.md) | KeyValues schema、校验规则、保存/重载/回滚/BOM、容量上限 |
 | [docs\04_部署与回滚.md](docs/04_部署与回滚.md) | 构建前置、产物清单、旧插件停用原因、备份/清单、卸载回滚、VPK 双端 |
-| [docs\05_测试清单.md](docs/05_测试清单.md) | **65 项**静态检查逐项、编译尺寸、运行时命令与实测结果、未验证项 |
+| [docs\05_测试清单.md](docs/05_测试清单.md) | 静态检查清单（1.0.4 起 65 项逐项累积，现行 145 项，历史段落保留原计数）、编译尺寸、运行时命令与实测结果、未验证项 |
 | [docs\06_已知限制.md](docs/06_已知限制.md) | 全部限制与风险的工程化描述 |
 
 ---

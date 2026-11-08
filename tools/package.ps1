@@ -81,6 +81,7 @@ foreach ($f in 'README.md', 'LICENSE', 'NOTICE') {
 }
 
 $install = Get-Content (Join-Path $PSScriptRoot 'INSTALL_TEMPLATE.md') -Raw -Encoding UTF8
+$install = $install.Replace('@VERSION@', $Version)
 [IO.File]::WriteAllText((Join-Path $Stage 'INSTALL.md'), $install, (New-Object System.Text.UTF8Encoding($false)))
 
 New-Item -ItemType Directory -Force -Path $DistRoot | Out-Null
