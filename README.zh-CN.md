@@ -51,14 +51,14 @@
 | 插件名 / 版本 | `CS2Unified (L4D2)` / `1.0.17` | `src\cs2unified.sp`（`CS2U_VERSION`）；DS 日志 `[CS2Unified] LOAD version=1.0.17 feel=0.5.7-m11 movement=0.5.3` |
 | 产物 | 单一 `build\cs2unified.smx`，**约 160–180 KB**（最新构建 **175,682 B**） | `tools\build.ps1`；`spcomp` 输出**不可逐字节复现**，同一源码两次构建大小会漂移、SHA256 每次不同 → **不要写死哈希，以当次 build 输出为准** |
 | 编译体积 | Code / Data / Stack 以当次 `build.ps1` 输出为准；error / warning 必须为 0 / 0 | `tools\build.ps1` 输出 |
-| 源码规模 | **23 个 `.sp`** / **15,103 行** / **573,761 B** | `src\` 同一统计口径（含 patch 生成的 `cs2movement_water.sp` 与 `cs2u_weapon.sp` / `cs2u_env.sp`） |
+| 源码规模 | **23 个 `.sp`** / **15,278 行** / **581,884 B** | `src\` 同一统计口径（含 patch 生成的 `cs2movement_water.sp` 与 `cs2u_weapon.sp` / `cs2u_env.sp`） |
 | 生成文件 | `src\feel\` 5 个、`src\movement\` **6 个**（上游 5 + patch 1，含 `cs2movement_injury.sp` / `cs2movement_water.sp`）由 `tools\sync_sources.ps1` 生成 | `powershell -File tools\sync_sources.ps1 -Check` → `SYNC-OK 11 files match upstream + rename table + patches` |
 | 静态验收 | **145 / 145 PASS** | `powershell -File tools\verify.ps1` → `VERIFY PASS (145 checks)` |
 | 编译告警 | 0 error / 0 warning（`-StrictWarnings`） | `verify.ps1` 第 2 项检查 |
 | 运行时冒烟 | 加载、状态、预设、保存/热重载、换图持久化、回滚、坏配置拒绝、BOM、控制台入口、还原、`set→changelevel`、`enable 0` 拒绝写、默认卸载、**简易模式持久化（旧版）**、**`cs2_tracer` 应用**、**曳光精灵预缓存**、**`cs2_competitive` 参数（1.0.4 时 36；1.0.9 起 37；1.0.10 起 39）**、**`managed_params`（1.0.10 起 39）**、**受伤减速状态（enable=1 / speed=132）**、**水面层（1.0.10：曲线/实时改值/预设 39/netprop/菜单行）**：**23 PASS / 3 UNVERIFIED**；UNVERIFIED = 真人客户端菜单/分页、曳光“看得见”、低血量受伤减速观感 | tests\results\runtime-smoke.md（开发版运行时记录） §0/§8–§17、tests\results\water-runtime-*.md（开发版运行时记录） |
 | 受管参数 | **39** 个（`cs2feel_*` 12 + `cs2movement_*` 15 + **`cs2movement_injury_*` 7** + **`cs2movement_water_*` 2** + `cs2u_tracer_*` 3；`cs2u_bmode` 属 feel 组） | `src\cs2u_params.sp`；`sm_cs2u_status` → `managed_params=39` |
 | 内置预设 | **7** 套 + 2 个 DIY 槽位（保存后才出现）；`cs2_full` / `cs2_competitive` 各 **39** 条全量写入，其余为语义子集并**自动补齐** `cs2u_bmode` 与水面键（`vanilla` 19 / `cs2_matched` 22 / `cs2_split` 22 / `cs2_tracer` 22 / `movement_only` 28） | `src\cs2u_modes.sp`；DS 落盘 `cs2unified.cfg` |
-| 对外接口 | **107** 个 ConVar（统一层 12 + feel 35 + **movement 60**）、22 个命令、7 个 feel natives | 旧审计 `_audit_extract.txt` 为 105 / 21 / 7（现 107 ConVar，missing=0；1.0.13 加 `cs2u_feel_survivor_only`，1.0.14 加回归命令 `sm_cs2u_menusel`） |
+| 对外接口 | **110** 个 ConVar（统一层 13 + feel 35 + **movement 62**）、**26** 个命令（统一层 14 + feel 6 + movement 6）、7 个 feel natives | 旧审计 `_audit_extract.txt` 为 105 / 21 / 7（现 110 ConVar / 26 命令，missing=0；增量来自 1.0.10 的 water 2 个、1.0.11 的 weapons、1.0.12 的 env、1.0.13 的 `cs2u_feel_survivor_only`、1.0.14 的 `sm_cs2u_menusel`） |
 | 实测环境 | L4D2 `PatchVersion 2.2.4.3`，SourceMod **1.12.0.7230**，MetaMod 1.12，64 tick（L4DToolZ），`-insecure` 专用服 `<DS_DIR>` | 运行时证据记录不随本公开仓库发布（见下方说明） |
 
 ### 2.1 基线版本（已统一）

@@ -452,7 +452,7 @@ cs2movement_water_slowdown   0.0–0.8    默认 0.35（factor = 1 - slowdown * 
 
 ---
 
-## 10. `menu.cfg`（v1.0.5，菜单布局与鉴权）
+## 10. `menu.cfg`（现行，菜单布局与鉴权）
 
 `addons/sourcemod/configs/cs2unified/menu.cfg` 是**独立文件**，不写进 `cs2unified.cfg`：后者的保存会整体重建 KeyValues，未建模的段会被覆盖丢失。
 
