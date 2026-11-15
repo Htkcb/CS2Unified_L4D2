@@ -4,6 +4,18 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
+<p align="center">
+  <a href="https://github.com/Htkcb/CS2Unified_L4D2/releases/latest"><b>⬇ Download latest v1.0.17</b></a>
+  &nbsp;|&nbsp;
+  <a href="https://github.com/Htkcb/CS2Unified_L4D2/releases">All releases</a>
+  &nbsp;|&nbsp;
+  <a href="docs/">Docs</a>
+  &nbsp;|&nbsp;
+  <a href="CHANGELOG.md">Changelog</a>
+</p>
+
+> **Only joining a server that already runs this?** You don't need SourceMod and you don't need the `.smx`: once the server owner installs it, you get the server-side behaviour on join. The optional client pieces exist only for exact bullet-hole tracking. See `INSTALL.md` §0-B in the download.
+
 > **About this mirror**: this repository is the **public release mirror** of CS2Unified_L4D2, periodically synced from a private development repo. It contains no development history, no runtime-evidence directory (`tests\results\`) and no internal handover documents.
 > `<DS_DIR>` / `<DS_HOST>` / `<REPO_ROOT>` / `<CLIENT_DIR>` are path placeholders — replace them with your own dedicated-server root (the directory containing `srcds.exe`), your server address, this repository's root, and your client's `left4dead2` directory.
 > You provide the runtime: an L4D2 dedicated server plus SourceMod 1.12 / MetaMod 1.12. Supply the RCON password via the `-Password` parameter or the `CS2U_RCON_PASSWORD` environment variable — **never commit it**.
@@ -19,9 +31,9 @@ This project merges **CS2-style gun feel** (cs2feel) and **CS2-style movement ph
 - since 1.0.10, a movement-level **survivor slowdown by water depth** (ankle / waist / eye); the infected team is completely unaffected,
 - since 1.0.12, an **environment-adaptation page** at the end of the movement section: it measures the actual tick via `GetTickInterval()` and aligns values that only hold at a specific tick — **preview first, then apply, undoable**, and it **never writes `sv_*`**.
 - since 1.0.13, the three feel layers (recoil / ballistics / spread) are **team-gated**: only the infected team is skipped; survivors and spectators are byte-for-byte unchanged (`cs2u_feel_survivor_only`, default on).
-- 1.0.14 fixed the **unresponsive action buttons** on the environment page and added a client-less row-replay command `sm_cs2u_menusel`; 1.0.15 fixed the **undo-message row counting** after a full menu audit (pure-tier adaptations used to report "0 values").
+- 1.0.14 fixed the **unresponsive action buttons** on the environment page and added a client-less row-replay command `sm_cs2u_menusel`; 1.0.15 fixed the **undo-message row counting** after a full menu audit (pure-tier adaptations used to report "0 values"). 1.0.16 moved the `cs2_full` / `cs2_competitive` crouch-slide time from **0.45 → 0.35** (feel tier) and widened the slide-tier cycle from 4 to **5 tiers** (0.20 / 0.35 / 0.40 / 0.45 / 0.50), replacing candidate 0.70 with 0.35; 1.0.17 moved it again **0.35 → 0.20**, back to the CS2 numeric tier (`ln(215/73.1)/5.2 ≈ 0.207 s`).
 
-- Plugin version: **1.0.16** (single artifact `cs2unified.smx`)
+- Plugin version: **1.0.17** (single artifact `cs2unified.smx`)
 - Upstream baselines: **cs2feel 0.5.7-m11** (5 `.sp` files) + **cs2movement 0.5.2** (`CS2Movement_L4D2.public`, 5 `.sp`, including `cs2movement_injury.sp`; locally bumped on 2026-11-01, not tagged)
 - Local patch layer: `patches\movement_water\` applies the **0.5.3 water-slowdown** patch at generation time (adds `cs2movement_water.sp` + 3 deterministic insertions); `sync_sources.ps1` uses the same transform for write mode and `-Check` mode, so `verify.ps1` can prove the patch is still in place
 - License: **GPL-3.0** (inherited from upstream CS2Movement_L4D2; see [NOTICE](NOTICE) and [LICENSE](LICENSE))
@@ -47,7 +59,7 @@ This project merges **CS2-style gun feel** (cs2feel) and **CS2-style movement ph
 
 | Item | Value | Evidence |
 |---|---|---|
-| Plugin name / version | `CS2Unified (L4D2)` / `1.0.16` | `src\cs2unified.sp` (`CS2U_VERSION`); DS log `[CS2Unified] LOAD version=1.0.16 feel=0.5.7-m11 movement=0.5.3` |
+| Plugin name / version | `CS2Unified (L4D2)` / `1.0.17` | `src\cs2unified.sp` (`CS2U_VERSION`); DS log `[CS2Unified] LOAD version=1.0.17 feel=0.5.7-m11 movement=0.5.3` |
 | Artifact | single `build\cs2unified.smx`, **~160–180 KB** | `tools\build.ps1`; `spcomp` output is **not byte-reproducible** — size drifts and SHA256 differs between builds of the same source → **do not hardcode hashes, trust the current build output** |
 | Compile | Code / Data / Stack per current `build.ps1` output; error / warning must be 0 / 0 | `tools\build.ps1` output |
 | Source size | **23 `.sp` files** / **15,103 lines** / **573,761 B** | same counting method over `src\` (incl. patch-generated `cs2movement_water.sp`, `cs2u_weapon.sp`, `cs2u_env.sp`) |
@@ -122,7 +134,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\build.ps1 -StrictWarnings
 powershell -ExecutionPolicy Bypass -File .\tools\verify.ps1
 ```
 
-Artifact: `build\cs2unified.smx` (~150 KB). **Do not compare sizes/hashes across builds**; `spcomp` output contains non-deterministic content.
+Artifact: `build\cs2unified.smx` (current 1.0.17 build **175,682 B**; size drifts between builds, see above). **Do not compare sizes/hashes across builds**; `spcomp` output contains non-deterministic content.
 
 ### 4.1.1 CI (one command, one exit code)
 
@@ -182,7 +194,7 @@ Notes (details in [docs\04_部署与回滚.md](docs/04_部署与回滚.md)):
 ### 4.3 Runtime commands
 
 ```
-sm plugins list                 # expect CS2Unified (L4D2) 1.0.16, no [FAILED]
+sm plugins list                 # expect CS2Unified (L4D2) 1.0.17, no [FAILED]
 sm_cs2u_status                  # version / config / presets / 39 params / menu layout / auth / feel / movement summary
 sm_cs2u_presets                 # list the 7 presets, [active] marked
 sm_cs2u_preset cs2_full         # full CS2 simulation (39/39 managed values), persisted  [ROOT]
@@ -208,7 +220,7 @@ Advanced mode (ROOT):
 
 Chat entry: **`!cs2u`** (SourceMod natively maps it to `sm_cs2u`). `!menu` / `!c2u` are common namespaces and are **not intercepted by default** (`cs2u_menu_chat_alias 0`) to avoid clashing with other plugins; enable explicitly with `cs2u_menu_chat_alias 1` only when no conflict exists. `!admin` is not taken over — SourceMod's own Admin Menu stays.
 
-> **1.0.15 menu**: basic/advanced views, 7 pages (presets, gun feel, movement & injury, visuals & crosshair, status, config & save + root), in-row parameter cycling; `menu.cfg` hot-reloads with fail-closed fallback + admin notice on validation failure. The movement section ends with two **code-owned three-level pages**: **detailed movement numbers** (root → movement & injury → 18 weapon speeds; click a row, type the value in chat, persists immediately, last row restores defaults in one click) and **environment adaptation** (root → movement & injury → probe / preview / apply / undo). Human-client click-through/paging remains `UNVERIFIED`.
+> **Current menu (shape frozen since 1.0.15)**: basic/advanced views, 7 pages (presets, gun feel, movement & injury, visuals & crosshair, status, config & save + root), in-row parameter cycling; `menu.cfg` hot-reloads with fail-closed fallback + admin notice on validation failure. The movement section ends with two **code-owned three-level pages**: **detailed movement numbers** (root → movement & injury → 18 weapon speeds; click a row, type the value in chat, persists immediately, last row restores defaults in one click) and **environment adaptation** (root → movement & injury → probe / preview / apply / undo). Human-client click-through/paging remains `UNVERIFIED`.
 
 > `sm_cs2u_set` and menu clicks now **persist immediately**: success echoes `OK: <cvar> = <value> (persisted)`; a failed write clearly reports `but persistence failed: <reason>` (memory value changed, disk still old — a map change would revert). Fixed and re-verified (`set 2.4` → `changelevel` → still `2.400`). When `cs2u_enable 0`, these write commands are refused; `status` / `diag` remain read-only.
 >

@@ -1,16 +1,28 @@
-﻿<p align="center"><img src=".github/assets/banner.png" alt="CS2Unified_L4D2" width="100%"></p>
+<p align="center"><img src=".github/assets/banner.png" alt="CS2Unified_L4D2" width="100%"></p>
 
 # CS2Unified_L4D2
 
 [English](README.md) | **简体中文**
 
+<p align="center">
+  <a href="https://github.com/Htkcb/CS2Unified_L4D2/releases/latest"><b>⬇ 下载最新版 v1.0.17</b></a>
+  &nbsp;|&nbsp;
+  <a href="https://github.com/Htkcb/CS2Unified_L4D2/releases">历史版本</a>
+  &nbsp;|&nbsp;
+  <a href="docs/">技术文档</a>
+  &nbsp;|&nbsp;
+  <a href="CHANGELOG.md">更新日志</a>
+</p>
+
+> **只是想进装了本插件的服？** 你不需要 SourceMod，也不需要 `.smx`：服主装好后你进服就有服务端效果；只有想让弹孔精确跟随准星，才需要装可选的客户端件。详见下载包内 `INSTALL.md` §0-B。
+
 > **公开版说明**：本仓库是 CS2Unified_L4D2 的**公开发布镜像**，由私有开发版定期同步发布；不包含开发历史、运行时证据目录（`tests\results\`）与内部任务书。
 > 文档中的 `<DS_DIR>` / `<DS_HOST>` / `<REPO_ROOT>` / `<CLIENT_DIR>` 是路径占位符，请替换为你自己的专用服根目录（含 `srcds.exe`）/ 服务器地址 / 本仓库根目录 / 客户端 `left4dead2` 目录。
 > 运行环境要求（自备）：L4D2 专用服 + SourceMod 1.12 / MetaMod 1.12；RCON 密码用 `-Password` 参数或 `CS2U_RCON_PASSWORD` 环境变量提供，**不要写进仓库**。
 
-把 **CS2 枪械手感**（cs2feel）与 **CS2 移动物理**（cs2movement）合并成**单一 `cs2unified.smx`**，并在这两个上游模块之上加一层统一管理面：**两级管理员菜单**（常用 6 行 / 高级 7 行，7 个页面，`menu.cfg` 可热重载）、**39 个受管参数**（含受伤减速 7 项、蹲下滑行 3 项、水面减速 2 项）的校验写入、7 套内置预设（含**完全仿真 CS2** 与**CS2 压枪 + 弹道曳光**）、KeyValues 配置持久化与回滚、**SteamID 列表 > 管理员组**鉴权；1.0.2 起另加一个**纯客户端**的「相机 / 准星分离」检测（Left4Neko 的 `l4n_view_punch_scale`，服务器只检测/引导，绝不动弹道）。1.0.10 起 movement 多一层**按水面高度（踝/腰/眼）的幸存者减速**，感染者完全不受影响。1.0.12 起移动页尾部多一页**环境适配**：按 `GetTickInterval()` 实测的 tick 与运行形态，把“只在某个 tick 下成立”的值一次对齐 —— **先预览、再应用、可撤销**，而且**从不写 `sv_*`**。1.0.13 起**手感三层（压枪 / 弹道 / 散布）按队门控**：只跳过特感，幸存者与旁观者行为逐字节不变（`cs2u_feel_survivor_only`，默认开）。1.0.14 修复**环境适配页四个动作按钮点了没反应**的解析 bug，并加了无需客户端的行回放命令 `sm_cs2u_menusel`；1.0.15 全菜单审计后修正**撤销消息漏数档位通道**的计数（纯档位适配时曾显示「0 个值」）。
+把 **CS2 枪械手感**（cs2feel）与 **CS2 移动物理**（cs2movement）合并成**单一 `cs2unified.smx`**，并在这两个上游模块之上加一层统一管理面：**两级管理员菜单**（常用 6 行 / 高级 7 行，7 个页面，`menu.cfg` 可热重载）、**39 个受管参数**（含受伤减速 7 项、蹲下滑行 3 项、水面减速 2 项）的校验写入、7 套内置预设（含**完全仿真 CS2** 与**CS2 压枪 + 弹道曳光**）、KeyValues 配置持久化与回滚、**SteamID 列表 > 管理员组**鉴权；1.0.2 起另加一个**纯客户端**的「相机 / 准星分离」检测（Left4Neko 的 `l4n_view_punch_scale`，服务器只检测/引导，绝不动弹道）。1.0.10 起 movement 多一层**按水面高度（踝/腰/眼）的幸存者减速**，感染者完全不受影响。1.0.12 起移动页尾部多一页**环境适配**：按 `GetTickInterval()` 实测的 tick 与运行形态，把“只在某个 tick 下成立”的值一次对齐 —— **先预览、再应用、可撤销**，而且**从不写 `sv_*`**。1.0.13 起**手感三层（压枪 / 弹道 / 散布）按队门控**：只跳过特感，幸存者与旁观者行为逐字节不变（`cs2u_feel_survivor_only`，默认开）。1.0.14 修复**环境适配页四个动作按钮点了没反应**的解析 bug，并加了无需客户端的行回放命令 `sm_cs2u_menusel`；1.0.15 全菜单审计后修正**撤销消息漏数档位通道**的计数（纯档位适配时曾显示「0 个值」）。1.0.16 把 `cs2_full` / `cs2_competitive` 的蹲下滑行时间从 **0.45 → 0.35**（手感档），简易/高级菜单的「滑行档位」由 4 档扩到 **5 档**（0.20 / 0.35 / 0.40 / 0.45 / 0.50），参数候选值用 0.35 替换 0.70；1.0.17 再把滑行时间 **0.35 → 0.20**，回到 CS2 的数值档（`ln(215/73.1)/5.2 ≈ 0.207 s` 的近似档）。
 
-- 插件版本：**1.0.16**（单一产物 `cs2unified.smx`）
+- 插件版本：**1.0.17**（单一产物 `cs2unified.smx`）
 - 上游基线：**cs2feel 0.5.7-m11**（5 个 `.sp`）+ **cs2movement 0.5.2**（`CS2Movement_L4D2.public`，5 个 `.sp`，含 `cs2movement_injury.sp`；2026-11-01 本地 bump，未打 tag）
 - 本地 patch 层：`patches\movement_water\` 在生成阶段给 movement 打上 **0.5.3 水面减速**（新增 `cs2movement_water.sp` + 3 处确定性插入）；`sync_sources.ps1` 写模式与 `-Check` 模式走同一套变换，`verify.ps1` 因此能证明补丁仍在
 - 许可：**GPL-3.0**（继承上游 CS2Movement_L4D2；见 [NOTICE](NOTICE) 与 [LICENSE](LICENSE)）
@@ -36,8 +48,8 @@
 
 | 项 | 值 | 证据 |
 |---|---|---|
-| 插件名 / 版本 | `CS2Unified (L4D2)` / `1.0.16` | `src\cs2unified.sp`（`CS2U_VERSION`）；DS 日志 `[CS2Unified] LOAD version=1.0.16 feel=0.5.7-m11 movement=0.5.3` |
-| 产物 | 单一 `build\cs2unified.smx`，**约 160–180 KB**（最新构建 **174,010 B**） | `tools\build.ps1`；`spcomp` 输出**不可逐字节复现**，同一源码两次构建大小会漂移、SHA256 每次不同 → **不要写死哈希，以当次 build 输出为准** |
+| 插件名 / 版本 | `CS2Unified (L4D2)` / `1.0.17` | `src\cs2unified.sp`（`CS2U_VERSION`）；DS 日志 `[CS2Unified] LOAD version=1.0.17 feel=0.5.7-m11 movement=0.5.3` |
+| 产物 | 单一 `build\cs2unified.smx`，**约 160–180 KB**（最新构建 **175,682 B**） | `tools\build.ps1`；`spcomp` 输出**不可逐字节复现**，同一源码两次构建大小会漂移、SHA256 每次不同 → **不要写死哈希，以当次 build 输出为准** |
 | 编译体积 | Code / Data / Stack 以当次 `build.ps1` 输出为准；error / warning 必须为 0 / 0 | `tools\build.ps1` 输出 |
 | 源码规模 | **23 个 `.sp`** / **15,103 行** / **573,761 B** | `src\` 同一统计口径（含 patch 生成的 `cs2movement_water.sp` 与 `cs2u_weapon.sp` / `cs2u_env.sp`） |
 | 生成文件 | `src\feel\` 5 个、`src\movement\` **6 个**（上游 5 + patch 1，含 `cs2movement_injury.sp` / `cs2movement_water.sp`）由 `tools\sync_sources.ps1` 生成 | `powershell -File tools\sync_sources.ps1 -Check` → `SYNC-OK 11 files match upstream + rename table + patches` |
@@ -112,7 +124,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\build.ps1 -StrictWarnings
 powershell -ExecutionPolicy Bypass -File .\tools\verify.ps1
 ```
 
-产物：`build\cs2unified.smx`（约 150 KB）。**不要跨次比对大小/哈希**，`spcomp` 产物含非确定内容。
+产物：`build\cs2unified.smx`（当前 1.0.17 构建 **175,682 B**；体积随 `spcomp` 漂移，见 §2 说明）。**不要跨次比对大小/哈希**，`spcomp` 产物含非确定内容。
 
 ### 4.1.1 CI（一条命令，一个退出码）
 
@@ -177,7 +189,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\deploy.ps1 -DisableProbes
 ### 4.3 运行时命令
 
 ```
-sm plugins list                 # 期望看到 CS2Unified (L4D2) 1.0.16，无 [FAILED]
+sm plugins list                 # 期望看到 CS2Unified (L4D2) 1.0.17，无 [FAILED]
 sm_cs2u_status                  # 版本 / 配置 / 预设 / 39 参数 / 菜单布局 / 鉴权 / feel / movement 摘要
 sm_cs2u_presets                 # 列出 7 套预设，标注 [active]
 sm_cs2u_preset cs2_full         # 完全仿真 CS2（39/39 个受管值）并落盘  [ROOT]
@@ -203,7 +215,7 @@ sm_cs2u_menudump                # 打印 7 个菜单页（常用/高级各一遍
 
 聊天入口：**`!cs2u`**（SourceMod 原生映射到 `sm_cs2u`）。`!menu` / `!c2u` 是常见命名空间，**默认不拦截**（`cs2u_menu_chat_alias 0`），避免与其它插件冲突；确实没有冲突时才 `cs2u_menu_chat_alias 1` 显式开启。`!admin` 未接管，仍是 SourceMod 自带 Admin Menu。
 
-> **1.0.15 菜单**：常用/高级两个视图，7 个页面（预设、手感、移动与受伤、视觉与准星、状态、配置与保存 + 根），参数行内循环；`menu.cfg` 可热重载，校验失败回退默认并提示管理员。移动页末尾有两页是**代码拥有的三层页**：**详细移动数值**（根 → 移动与受伤 → 18 件武器速度，点一行后在聊天栏输入数值，立即写盘、末行可一键恢复默认）与 **环境适配**（根 → 移动与受伤 → 探测 / 预览 / 确认 / 撤销）。真人客户端点选/翻页仍是 `UNVERIFIED`。
+> **当前菜单（结构自 1.0.15 起定型）**：常用/高级两个视图，7 个页面（预设、手感、移动与受伤、视觉与准星、状态、配置与保存 + 根），参数行内循环；`menu.cfg` 可热重载，校验失败回退默认并提示管理员。移动页末尾有两页是**代码拥有的三层页**：**详细移动数值**（根 → 移动与受伤 → 18 件武器速度，点一行后在聊天栏输入数值，立即写盘、末行可一键恢复默认）与 **环境适配**（根 → 移动与受伤 → 探测 / 预览 / 确认 / 撤销）。真人客户端点选/翻页仍是 `UNVERIFIED`。
 
 > `sm_cs2u_set` 与菜单点选现在**立即持久化**：成功后回显 `OK: <cvar> = <value> (persisted)`，写盘失败则明确提示 `but persistence failed: <原因>`（此时内存值已改、磁盘仍是旧值，换图会回退）。该行为已修复并复验（`set 2.4` → `changelevel` → 仍 `2.400`）。`cs2u_enable 0` 时这些写命令会被拒绝，`status`/`diag` 仍只读可用。
 >
